@@ -1,0 +1,120 @@
+
+html, body{
+height:100%;
+margin: 0;
+padding:0;
+
+}
+
+div::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+#map-places{
+	height:65%;	
+	width: 60%;
+	/*margin:5%;
+  margin-top:2%;*/
+  margin: 0 5% 5% 5%;
+  
+  position: relative;
+  float:left;
+}
+
+#places-list{
+ float:left;
+ position: relative; 
+ width: 25%;
+ height: 65%;
+ overflow-y:auto;
+ border: 1px solid #d3d3d3;
+ box-shadow: 1px 1px 5px #d3d3d3;
+}
+
+.box{
+  margin: 100px auto 30px;
+  width: 300px;
+  height: 50px;
+}
+
+.container-1{
+  width: 300px;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+}
+
+.container-1 input#search{
+  width: 250px;
+  height: 50px;
+  background: #fff;//#2b303b;
+  border: 1px #2b303b solid;
+  font-size: 10pt;
+  float: left;
+  color: #63717f;
+  padding-left: 25px; 
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-top-left-radius: 5px;
+  border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.container-1 input#search::-webkit-input-placeholder {
+   color: #65737e;
+}
+ 
+.container-1 input#search:-moz-placeholder { /* Firefox 18- */
+   color: #65737e;  
+}
+ 
+.container-1 input#search::-moz-placeholder {  /* Firefox 19+ */
+   color: #65737e;  
+}
+ 
+.container-1 input#search:-ms-input-placeholder {  
+   color: #65737e;  
+}
+
+.container-1 input#search:focus, .container-1 input#search:active{
+    outline:none;  
+  }
+  
+button{
+	outline:none;
+	height:50px;
+	width: 30px;
+	background: #2b303b;
+	border: none;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;	
+	cursor:pointer; 
+  float:left;
+  color:#fff !important; 
+}
+
+#search::-webkit-search-cancel-button{
+	 -webkit-appearance: none;
+}
+
+ul{
+  list-style: none;
+  margin: 0;
+  padding: 0.5em;
+  text-align: center;
+}
+
+.placesCard{
+  width:99%;
+  height: 7em;
+  padding: 1em;
+  margin-bottom:0.5em;
+  border: 1px solid #d3d3d3;
+  box-shadow: 1px 1px 5px #d3d3d3;
+}
