@@ -4,6 +4,7 @@ var map;
 var currentLatlng;
 var searchMode =false;
 var locationClicked =false;
+var markerArr =[];
 
 function initMap() {
    
@@ -92,12 +93,21 @@ function drawPlaceDetails(results){
         makeSelection[0].addEventListener('click',function(event){ 
               locationClicked = true;            
               $('#places-list').empty();             
-              var photo = getPhotoURL(results[$(this).index()].photos);            
-              var img = $('<img id="dynamic">'); 
-              img.attr('src', photo);
-              img.appendTo('#places-list');
-              $("#places-list").append("<ul></ul>");
-              $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
+              if(results[$(this).index()].photos){
+                var photo = getPhotoURL(results[$(this).index()].photos);            
+                var img = $('<img id="dynamic" class="resizeImage" alt= \'images/NoImage.png\'>'); 
+                img.attr('src', photo);
+                img.appendTo('#places-list');
+                $("#places-list").append("<ul></ul>");
+                $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
+              }
+              else{
+                var img = $('<img id="dynamic" class="resizeNoImage">'); 
+                img.attr('src', "images/NoImage.png");
+                img.appendTo('#places-list');
+                $("#places-list").append("<ul></ul>");
+                $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
+              }
 
               //Set the marker to the selected place and redraw the map:
               deleteAllMarkers();
@@ -108,7 +118,7 @@ function drawPlaceDetails(results){
         makeSelection.appendTo( "ul" );      
   }
 }
-var markerArr =[];
+
     function createMarker(place) {     
         var marker = new google.maps.Marker({
           map: map,
@@ -125,6 +135,6 @@ var markerArr =[];
 function getPhotoURL(photos){
  
   if(photos){
-    return photos[0].getUrl({'maxWidth': 500, 'maxHeight': 150});     
+    return photos[0].getUrl({'maxWidth': 800, 'maxHeight': 150});     
   }
 }
