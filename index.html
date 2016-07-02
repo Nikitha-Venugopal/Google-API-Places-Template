@@ -42,12 +42,18 @@
 
 
   <script type="text/html" id="places-template">
-      <li>   
+      <li class="listOfPlaces">   
       <div class="placesCard">   
         <div id= "places-name" class="places-name">${name}</div>
         <div id="places-address" class="places-address">${formatted_address}</div> 
       </div>  
-    </li> 
+    </li>     
+  </script>
+
+   <script type="text/html" id="places-details-template">
+           
+        <div>${name}</div>      
+        
   </script>
 
 

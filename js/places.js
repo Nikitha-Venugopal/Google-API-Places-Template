@@ -3,6 +3,7 @@
 var map;
 var currentLatlng;
 var searchMode =false;
+var locationClicked =false;
 
 function initMap() {
    
@@ -43,7 +44,7 @@ $("#search").keyup(function(event){
 
 function initialize() {       
     searchMode = true;  
-    $('#places-list > span').empty();   
+    $('#places-list').empty();   
     infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
     service.textSearch({
@@ -53,6 +54,7 @@ function initialize() {
   }
 
       function callback(results, status) {
+        deleteAllMarkers();
         if (status === google.maps.places.PlacesServiceStatus.OK) {
       console.log(results.length);
           for (var i = 0; i < results.length; i++) {
@@ -63,32 +65,56 @@ function initialize() {
               lat: results[0].geometry.location.lat(),
               lng: results[0].geometry.location.lng()
             };
-      //currentLatlng = new google.maps.LatLng(results[0].geometry.location.lat(),results[0].geometry.location.lng());
+      
+      setMapOnAll(map);
       map.setCenter(updatedPos);
       drawPlaceDetails(results);     
         
       }
   }
+// Sets the markesr in their place:
+function setMapOnAll(map) {
+        for (var i = 0; i < markerArr.length; i++) {
+          markerArr[i].setMap(map);
+        }
+      }
+function deleteAllMarkers(){
+  setMapOnAll(null);
+  markerArr =[];
+}
 
 function drawPlaceDetails(results){
- $('#places-list > ul').empty();
+ $('#places-list').empty();
      $("#places-list").append("<ul></ul>");
      for(var i=0; i<results.length; i++){
         var result = results[i];       
         var makeSelection = $("#places-template").tmpl(result);
-        makeSelection[0].addEventListener('click',function(event){      
-          console.log(results[$(this).index()]);
-         });
-        makeSelection.appendTo( "ul" );
-      
+        makeSelection[0].addEventListener('click',function(event){ 
+              locationClicked = true;            
+              $('#places-list').empty();             
+              var photo = getPhotoURL(results[$(this).index()].photos);            
+              var img = $('<img id="dynamic">'); 
+              img.attr('src', photo);
+              img.appendTo('#places-list');
+              $("#places-list").append("<ul></ul>");
+              $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
+
+              //Set the marker to the selected place and redraw the map:
+              deleteAllMarkers();
+              var loc = new google.maps.LatLng(results[$(this).index()].geometry.location.lat(),results[$(this).index()].geometry.location.lng());
+              createMarker(loc);    
+              setMapOnAll(map);             
+          });
+        makeSelection.appendTo( "ul" );      
   }
 }
+var markerArr =[];
     function createMarker(place) {     
         var marker = new google.maps.Marker({
           map: map,
           position: place
         });
-    
+    markerArr.push(marker);
     //console.log(place);
     google.maps.event.addListener(marker, 'click', function() {
           infowindow = new google.maps.InfoWindow();
@@ -97,8 +123,8 @@ function drawPlaceDetails(results){
         });
       }
 function getPhotoURL(photos){
-  alert("photos");
+ 
   if(photos){
-    return photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35});     
+    return photos[0].getUrl({'maxWidth': 500, 'maxHeight': 150});     
   }
 }
