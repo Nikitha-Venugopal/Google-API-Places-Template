@@ -48,17 +48,30 @@ function initialize() {
     searchMode = true;  
     $('#places-list').empty();       
     service = new google.maps.places.PlacesService(map);
-    service.textSearch({
+    if(document.getElementById("search").value ===""){
+       $('#places-list').empty();
+       var noResultsDiv = $('<span class="initialSearchText"> Come On.. Its a Blank Search</span>');
+       noResultsDiv.appendTo('#places-list');
+    }
+    else{
+      service.textSearch({
       location: currentLatlng,     
       query: document.getElementById("search").value
-    }, callback);       
+    }, callback);
+    }
+           
   }
 
       function callback(results, status) {
         deleteAllMarkers();
         var infowindow = new google.maps.InfoWindow();
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-      console.log(results.length);
+        if(status === "ZERO_RESULTS"){
+          $('#places-list').empty();
+       var noResultsDiv = $('<span class="initialSearchText"> Oops...NO Results ... Dont Give up Now.. Search Again</span>');
+       noResultsDiv.appendTo('#places-list');
+        }
+        else if (status === google.maps.places.PlacesServiceStatus.OK) {
+          //console.log(results.length);
           for (var i = 0; i < results.length; i++) {
             var loc = new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng());
             createMarker(loc, results[i].name,infowindow);       
@@ -70,8 +83,7 @@ function initialize() {
       
       setMapOnAll(map);
       map.setCenter(updatedPos);
-      drawPlaceDetails(results,infowindow);     
-        
+      drawPlaceDetails(results,infowindow);        
       }
   }
 // Sets the markesr in their place:
@@ -86,7 +98,12 @@ function deleteAllMarkers(){
 }
 
 function drawPlaceDetails(results,infowindow){
- $('#places-list').empty();
+
+  if(!results){
+    alert("Empty results");
+  }
+  else{
+     $('#places-list').empty();
      $("#places-list").append("<ul></ul>");
      for(var i=0; i<results.length; i++){
         var result = results[i];       
@@ -117,7 +134,7 @@ function drawPlaceDetails(results,infowindow){
 
               $("#places-list").append("<ul></ul>");
               if(details.website){
-                 details.website = details.website.split("//")[1].split("/")[0];
+                 details.additionalWebsite = details.website.split("//")[1].split("/")[0];
               }
               else{
                 details.website = "No Website Information";
@@ -139,6 +156,7 @@ function drawPlaceDetails(results,infowindow){
           });
         makeSelection.appendTo( "ul" );      
   }
+}
 }
 
     function createMarker(place, placeName,infowindow) { 
