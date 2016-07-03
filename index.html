@@ -29,7 +29,7 @@
 
   <div id="map-places"></div>
   <div id="places-list">
-    <span>Type in your Search in the Search Box</span>
+    <span class="initialSearchText">Well... Go Ahead.. Search for Places</span>
   </div>
 
    <script src="js/jquery.js"></script>     
@@ -44,16 +44,25 @@
   <script type="text/html" id="places-template">
       <li class="listOfPlaces">   
       <div class="placesCard">   
-        <div id= "places-name" class="places-name">${name}</div>
-        <div id="places-address" class="places-address">${formatted_address}</div> 
+        <div id= "places-name" class="places-name nameFont">${name}</div>
+        <div id="places-address" class="places-address addressFont">${formatted_address}</div> 
       </div>  
     </li>     
   </script>
 
-   <script type="text/html" id="places-details-template">
-           
-        <div>${name}</div>      
-        
+   <script type="text/html" id="places-details-template">          
+        <h3>${name}</h3>  
+        <div class="placeDetails">
+        <dl>
+            <i class="fa fa-map-marker" aria-hidden="true"><span class="fontClass prewrap">&nbsp${formatted_address}</span></i>
+        </dl>
+        <dl> 
+            <i class="fa fa-phone" aria-hidden="true"><span class="fontClass nowrap">&nbsp${formatted_phone_number}</span></i>
+        </dl> 
+        <dl>   
+            <i class="fa fa-globe" aria-hidden="true"><span class="fontClass nowrap">&nbsp${website}</span></i>
+        </dl>
+        </div>
   </script>
 
 

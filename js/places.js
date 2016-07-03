@@ -3,8 +3,8 @@
 var map;
 var currentLatlng;
 var searchMode =false;
-var locationClicked =false;
 var markerArr =[];
+var service;
 
 function initMap() {
    
@@ -12,6 +12,7 @@ function initMap() {
           center: {lat: -34.397, lng: 150.644},
           zoom: 13
         });
+       var infowindow = new google.maps.InfoWindow();
     currentLatlng = new google.maps.LatLng(-34.397,150.644); // Convert Lat Lng to Positions to create marker
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -21,7 +22,7 @@ function initMap() {
               lng: position.coords.longitude
             };
        currentLatlng = new google.maps.LatLng(pos.lat,pos.lng);
-       createMarker(currentLatlng);
+       createMarker(currentLatlng, "Your Location",infowindow);
             
             map.setCenter(pos);
           }, function() {
@@ -34,7 +35,7 @@ function initMap() {
       }
 
       function handleLocationError(browserHasGeolocation, currentLatlng) {
-       createMarker(currentLatlng);
+       createMarker(currentLatlng, "Your Location", infowindow);
       }
 
 $("#search").keyup(function(event){
@@ -45,9 +46,8 @@ $("#search").keyup(function(event){
 
 function initialize() {       
     searchMode = true;  
-    $('#places-list').empty();   
-    infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(map);
+    $('#places-list').empty();       
+    service = new google.maps.places.PlacesService(map);
     service.textSearch({
       location: currentLatlng,     
       query: document.getElementById("search").value
@@ -56,11 +56,12 @@ function initialize() {
 
       function callback(results, status) {
         deleteAllMarkers();
+        var infowindow = new google.maps.InfoWindow();
         if (status === google.maps.places.PlacesServiceStatus.OK) {
       console.log(results.length);
           for (var i = 0; i < results.length; i++) {
             var loc = new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng());
-            createMarker(loc);       
+            createMarker(loc, results[i].name,infowindow);       
           }
        var updatedPos = {
               lat: results[0].geometry.location.lat(),
@@ -69,7 +70,7 @@ function initialize() {
       
       setMapOnAll(map);
       map.setCenter(updatedPos);
-      drawPlaceDetails(results);     
+      drawPlaceDetails(results,infowindow);     
         
       }
   }
@@ -84,42 +85,64 @@ function deleteAllMarkers(){
   markerArr =[];
 }
 
-function drawPlaceDetails(results){
+function drawPlaceDetails(results,infowindow){
  $('#places-list').empty();
      $("#places-list").append("<ul></ul>");
      for(var i=0; i<results.length; i++){
         var result = results[i];       
         var makeSelection = $("#places-template").tmpl(result);
         makeSelection[0].addEventListener('click',function(event){ 
-              locationClicked = true;            
+
+            //The following request is made to get additional details for a given place
+            var request = {reference: results[$(this).index()].reference};
+            service = new google.maps.places.PlacesService(map);
+             service.getDetails(request, function(details, status) {
+                console.log(details);
+                      
               $('#places-list').empty();             
-              if(results[$(this).index()].photos){
-                var photo = getPhotoURL(results[$(this).index()].photos);            
+              if(details.photos){
+                var photo = getPhotoURL(details.photos);            
                 var img = $('<img id="dynamic" class="resizeImage" alt= \'images/NoImage.png\'>'); 
                 img.attr('src', photo);
                 img.appendTo('#places-list');
-                $("#places-list").append("<ul></ul>");
-                $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
               }
               else{
                 var img = $('<img id="dynamic" class="resizeNoImage">'); 
                 img.attr('src', "images/NoImage.png");
                 img.appendTo('#places-list');
-                $("#places-list").append("<ul></ul>");
-                $("#places-details-template").tmpl(results[$(this).index()]).appendTo("ul");
+                /*$("#places-list").append("<ul></ul>");
+                details.website = details.website.split("//");
+                $("#places-details-template").tmpl(details).appendTo("ul");*/
               }
+
+              $("#places-list").append("<ul></ul>");
+              if(details.website){
+                 details.website = details.website.split("//")[1].split("/")[0];
+              }
+              else{
+                details.website = "No Website Information";
+              }
+
+              if(!details.formatted_phone_number){
+                 details.formatted_phone_number = "No Information Available";
+              }              
+
+              $("#places-details-template").tmpl(details).appendTo("ul");
 
               //Set the marker to the selected place and redraw the map:
               deleteAllMarkers();
-              var loc = new google.maps.LatLng(results[$(this).index()].geometry.location.lat(),results[$(this).index()].geometry.location.lng());
-              createMarker(loc);    
-              setMapOnAll(map);             
+              var loc = new google.maps.LatLng(details.geometry.location.lat(),details.geometry.location.lng());
+              createMarker(loc, details.name,infowindow);    
+              setMapOnAll(map);     
+
+              });        
           });
         makeSelection.appendTo( "ul" );      
   }
 }
 
-    function createMarker(place) {     
+    function createMarker(place, placeName,infowindow) { 
+    infowindow.close();       
         var marker = new google.maps.Marker({
           map: map,
           position: place
@@ -127,8 +150,9 @@ function drawPlaceDetails(results){
     markerArr.push(marker);
     //console.log(place);
     google.maps.event.addListener(marker, 'click', function() {
-          infowindow = new google.maps.InfoWindow();
-          infowindow.setContent(place.name);
+         
+          
+          infowindow.setContent(placeName);
           infowindow.open(map, this);
         });
       }

@@ -34,6 +34,7 @@ div::-webkit-scrollbar-thumb {
  overflow-y:auto;
  border: 1px solid #d3d3d3;
  box-shadow: 1px 1px 5px #d3d3d3;
+ text-align: center;
 }
 
 .box{
@@ -117,13 +118,45 @@ ul{
   margin-bottom:0.5em;
   border: 1px solid #d3d3d3;
   box-shadow: 1px 1px 5px #d3d3d3;
+  font-family: Calibri;
+  cursor:pointer;
+}
+.nameFont{
+  font-size: 1.5em;
+}
+.addressFont{
+  font-size: 1.15em;
 }
 
 .resizeImage{
-  height:30%;
+  height:40%;
   width:100%;
 }
 .resizeNoImage{ 
   width: 40%;
   margin-left: 30%;
+}
+.placeDetails{
+  width:100%;
+  text-align:left;  
+  margin-top:20px;
+}
+
+.fontClass{
+  font-family: Calibri;
+  font-size: 1.2em;  
+  padding:2%;
+  width: 100%; 
+}
+.nowrap{
+   white-space: nowrap;
+}
+
+.initialSearchText{
+  display:table;
+  margin:40% auto;
+  font-family: Calibri;
+  font-size:2em;
+  font-style: Italic;
+  color: #808080;
 }
