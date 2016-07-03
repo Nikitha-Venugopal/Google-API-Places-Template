@@ -38,9 +38,8 @@
    <script type="text/javascript" src="js/places.js"></script>   
    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKhT1IcV8QE5XCZI_MwTs3elH4IS6W1aA&libraries=places&callback=initMap" async defer">
    </script>
-  
 
-
+   <!--The following is the template to show the places list after search-->
   <script type="text/html" id="places-template">
       <li class="listOfPlaces">   
       <div class="placesCard">   
@@ -50,6 +49,7 @@
     </li>     
   </script>
 
+<!--The following is the template to show the places details after clicking on places results card-->
    <script type="text/html" id="places-details-template">          
         <h3>${name}</h3>  
         <div class="placeDetails">
@@ -63,10 +63,7 @@
             <i class="fa fa-globe" aria-hidden="true"><span class="fontClass nowrap"><a href=${website}>&nbsp${additionalWebsite}</a></span></i>
         </dl>
         </div>
-  </script>
-
-
- 
+  </script> 
    
 </body>
 </html>
